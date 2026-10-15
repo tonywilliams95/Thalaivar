@@ -8,7 +8,7 @@ Thalaivar walks onto your screen, right over VS Code, and tells you to drink wat
 
 ![Thalaivar reminder](assets/preview.png)
 
-- 🚶 Walks in from the side of the screen and stops in the middle
+- 🚶 Walks in from the left or right (taking real steps), stops in the middle, then carries on across and off the other side
 - 💬 Speech bubble with a random punch dialogue and your name
 - ✅ **YES** logs a glass and he walks off happy; **Remind me later** snoozes for 10 minutes
 - 💧 Today's glass count in the menu bar / system tray
@@ -40,9 +40,12 @@ He shows up a moment after launch, then every 45 minutes. Use the 💧 tray / me
   "name": "Akash",
   "intervalMinutes": 45,
   "snoozeMinutes": 10,
-  "dailyGoal": 8
+  "dailyGoal": 8,
+  "enterFrom": "random"
 }
 ```
+
+`enterFrom` can be `"left"`, `"right"` or `"random"`.
 
 ## Use your own Thalaivar image
 
@@ -53,7 +56,7 @@ The built-in character is a cartoon. To use your own picture or animation, drop 
 | `assets/character.png` (or `.gif` / `.webp`) | Standing and talking |
 | `assets/walk.gif` (or `.webp` / `.png`) | Walking in and out |
 
-If only one is present, it's used for both.
+If only one is present, it's used for both. The included `walk.webp` is a 4-frame walk cycle built from `character.png`: the legs alternate, he bobs, and his weight shifts from side to side.
 
 ## Notes
 

@@ -62,10 +62,11 @@ async function enter(data) {
 
   custom.hidden = !state.custom;
   cartoon.style.display = state.custom ? 'none' : '';
+  character.classList.toggle('custom', !!state.custom);
 
   bubble.classList.add('hidden');
   buttons.classList.remove('hidden');
-  place(-WIDTH - 80, false);
+  place(offstage(state.fromLeft), false);
   await wait(50);
 
   const centre = Math.round(window.innerWidth / 2 - WIDTH / 2);
@@ -76,7 +77,13 @@ async function enter(data) {
   bubble.classList.remove('hidden');
 }
 
-async function leave(text, toRight) {
+// Just off the left or right edge of the screen.
+function offstage(left) {
+  return left ? -WIDTH - 80 : window.innerWidth + 80;
+}
+
+// He keeps walking the way he came in, so he crosses the whole screen.
+async function leave(text) {
   buttons.classList.add('hidden');
   line.textContent = text;
   // Re-trigger the pop animation for the new text.
@@ -87,7 +94,7 @@ async function leave(text, toRight) {
 
   await wait(1800);
   bubble.classList.add('hidden');
-  await walkTo(toRight ? window.innerWidth + 80 : -WIDTH - 80);
+  await walkTo(offstage(!state.fromLeft));
   character.classList.remove('happy');
   busy = false;
   window.thalaivar.done();
@@ -100,7 +107,7 @@ $('yes').addEventListener('click', () => {
 
 $('later').addEventListener('click', () => {
   window.thalaivar.answer('later');
-  leave(fill('Sari sari... {snoozeMinutes} nimisham. I\'ll be back, {name}! 🕶️'), false);
+  leave(fill('Sari sari... {snoozeMinutes} nimisham. I\'ll be back, {name}! 🕶️'));
 });
 
 // Count comes back from the main process after YES, so the thanks line is accurate.
@@ -110,7 +117,7 @@ window.thalaivar.onCount(({ count, goal }) => {
     count >= goal
       ? fill('Goal done! {count}/{goal} 🏆 En vazhi, hydrated vazhi, {name}!', { count, goal })
       : fill(pick(THANKS), { count, goal });
-  leave(text, true);
+  leave(text);
 });
 
 // The window ignores mouse clicks except while you're over the bubble.

@@ -13,6 +13,7 @@ const DEFAULT_CONFIG = {
   intervalMinutes: 45,
   snoozeMinutes: 10,
   dailyGoal: 8,
+  enterFrom: 'random', // 'left', 'right' or 'random'
 };
 
 let tray;
@@ -100,6 +101,7 @@ function remind() {
     count: glassesToday(),
     goal: config.dailyGoal,
     snoozeMinutes: config.snoozeMinutes,
+    fromLeft: config.enterFrom === 'random' ? Math.random() < 0.5 : config.enterFrom !== 'right',
     custom,
   });
   updateTray();
