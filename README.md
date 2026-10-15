@@ -1,52 +1,63 @@
 # 🕶️ Thalaivar Water Reminder
 
-A Superstar-style hydration alarm for VS Code. Every so often Thalaivar takes over your editor with an iPhone-style alarm screen, a punch dialogue, and one simple order: **drink water. Mind it!**
+Thalaivar walks onto your screen, right over VS Code, and tells you to drink water.
 
-## Features
+> *"En vazhi thani vazhi... but water is for everyone! 😎💧"*
+>
+> **[ YES ]**  Remind me later
 
-- **Alarm screen** — big clock, orange **Snooze** button and **slide to drink 💧** slider, just like a phone alarm.
-- **Punch dialogues** — a random Thalaivar-style line with every reminder.
-- **Daily glass tracker** — 💧💧○○○○○○ progress towards your daily goal; resets each day.
-- **Status bar countdown** — `🕶️ 💧 3/8 · 27m`. Click it for quick actions.
-- **Chime** — a short alarm tone (can be turned off).
-- **Quiet mode** — use a plain notification instead of the full alarm screen.
+![Thalaivar reminder](assets/preview.png)
 
-## Commands
+- 🚶 Walks in from the side of the screen and stops in the middle
+- 💬 Speech bubble with a random punch dialogue and your name
+- ✅ **YES** logs a glass and he walks off happy; **Remind me later** snoozes for 10 minutes
+- 💧 Today's glass count in the menu bar / system tray
+- 🪟 See-through, always-on-top overlay that never steals focus, so you can keep typing
 
-Open the Command Palette (`Ctrl/Cmd+Shift+P`) and type **Thalaivar**:
+## Run it
 
-| Command | What it does |
-| --- | --- |
-| Thalaivar: Start Reminders | Start (or restart) the countdown |
-| Thalaivar: Pause Reminders | Pause reminders |
-| Thalaivar: I Drank Water 💧 | Log a glass and restart the countdown |
-| Thalaivar: Show Alarm Now | Trigger the alarm right away |
-| Thalaivar: Reset Today's Count | Set today's glasses back to 0 |
+Needs [Node.js](https://nodejs.org) 18 or newer.
+
+```bash
+npm install
+npm start
+```
+
+He shows up a moment after launch, then every 45 minutes. Use the 💧 tray / menu-bar icon to:
+
+- call him now
+- log a glass
+- pause reminders
+- change the interval
+- edit your settings
 
 ## Settings
 
-| Setting | Default | Description |
-| --- | --- | --- |
-| `thalaivar.intervalMinutes` | `45` | Minutes between reminders |
-| `thalaivar.snoozeMinutes` | `9` | Snooze length |
-| `thalaivar.dailyGoal` | `8` | Glasses per day |
-| `thalaivar.style` | `alarm` | `alarm` (full screen) or `notification` |
-| `thalaivar.playSound` | `true` | Play the chime |
-| `thalaivar.enabledOnStartup` | `true` | Start automatically when VS Code opens |
+**Edit settings** in the tray menu opens `config.json`. Changes apply as soon as you save it.
 
-Closing the alarm tab without choosing counts as a snooze, so Thalaivar will be back.
-
-## Run it locally
-
-1. Open this folder in VS Code.
-2. Press `F5` to launch an Extension Development Host.
-3. Run **Thalaivar: Show Alarm Now** to see it straight away.
-
-## Install as a .vsix
-
-```bash
-npx @vscode/vsce package
-code --install-extension thalaivar-water-reminder-0.1.0.vsix
+```json
+{
+  "name": "Akash",
+  "intervalMinutes": 45,
+  "snoozeMinutes": 10,
+  "dailyGoal": 8
+}
 ```
+
+## Use your own Thalaivar image
+
+The built-in character is a cartoon. To use your own picture or animation, drop files into `assets/`. A transparent background looks best.
+
+| File | Used when |
+| --- | --- |
+| `assets/character.png` (or `.gif` / `.webp`) | Standing and talking |
+| `assets/walk.gif` (or `.webp` / `.png`) | Walking in and out |
+
+If only one is present, it's used for both.
+
+## Notes
+
+- **macOS / Windows:** clicks pass through the overlay to your editor, except on the speech bubble.
+- **Linux:** the overlay catches clicks while he's on screen, for a few seconds per reminder.
 
 A fan-made tribute; not affiliated with Rajinikanth.

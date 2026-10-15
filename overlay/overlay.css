@@ -1,0 +1,99 @@
+html, body {
+  margin: 0;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+}
+
+#stage { position: relative; width: 100%; height: 100%; }
+
+/* --- the character ------------------------------------------------------ */
+
+#character {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  transition: transform var(--walk-ms, 3200ms) linear;
+}
+
+#body {
+  position: relative;
+  width: 200px;
+  height: 470px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .45));
+}
+
+#custom { max-width: 260px; max-height: 470px; object-fit: contain; }
+
+.walking #body { animation: bob .45s ease-in-out infinite; }
+.walking .foot { animation: step .9s ease-in-out infinite; }
+.walking #footR { animation-delay: -.45s; }
+.walking #veshti { animation: sway .9s ease-in-out infinite; transform-origin: 100px 252px; }
+
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes step { 0%, 100% { transform: translateY(0); } 25% { transform: translateY(-8px); } 50% { transform: translateY(0); } }
+@keyframes sway { 0%, 100% { transform: skewX(0); } 25% { transform: skewX(1.5deg); } 75% { transform: skewX(-1.5deg); } }
+
+/* little "mind it" hop when you say YES */
+.happy #body { animation: hop .5s ease-out 2; }
+@keyframes hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-22px) rotate(-2deg); } }
+
+/* --- speech bubble ---------------------------------------------------- */
+
+#bubble {
+  position: absolute;
+  bottom: 488px;
+  left: 50%;
+  width: 360px;
+  margin-left: -180px;
+  padding: 16px 20px 14px;
+  background: rgba(246, 241, 226, .97);
+  color: #3a3a3c;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .35);
+  text-align: center;
+  transform-origin: 50% 110%;
+  animation: pop .35s cubic-bezier(.2, 1.5, .4, 1) both;
+}
+#bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  margin-left: -10px;
+  width: 20px;
+  height: 20px;
+  background: inherit;
+  transform: rotate(45deg);
+  border-radius: 0 0 4px 0;
+}
+#bubble.hidden { display: none; }
+@keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+#line { margin: 0 0 12px; font-size: 17px; line-height: 1.35; }
+#buttons { display: flex; align-items: center; justify-content: center; gap: 22px; }
+#buttons.hidden { display: none; }
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: none;
+}
+#yes {
+  background: #2c7be5;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 8px 26px;
+  border-radius: 20px;
+}
+#yes:hover { background: #1f6fd6; }
+#later { color: #8e8e93; font-size: 16px; padding: 8px 4px; }
+#later:hover { color: #5c5c60; }
