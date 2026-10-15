@@ -1,0 +1,81 @@
+{
+  "name": "thalaivar-water-reminder",
+  "displayName": "Thalaivar Water Reminder",
+  "description": "Superstar-style hydration alarm for VS Code. Thalaivar says it once — it's like he said it a hundred times. Drink water!",
+  "version": "0.1.0",
+  "publisher": "tonywilliams95",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tonywilliams95/thalaivar"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "water",
+    "hydration",
+    "reminder",
+    "rajinikanth",
+    "thalaivar",
+    "health"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "thalaivar.start", "title": "Start Reminders", "category": "Thalaivar" },
+      { "command": "thalaivar.stop", "title": "Pause Reminders", "category": "Thalaivar" },
+      { "command": "thalaivar.drink", "title": "I Drank Water 💧", "category": "Thalaivar" },
+      { "command": "thalaivar.showAlarm", "title": "Show Alarm Now", "category": "Thalaivar" },
+      { "command": "thalaivar.resetToday", "title": "Reset Today's Count", "category": "Thalaivar" }
+    ],
+    "configuration": {
+      "title": "Thalaivar Water Reminder",
+      "properties": {
+        "thalaivar.intervalMinutes": {
+          "type": "number",
+          "default": 45,
+          "minimum": 1,
+          "description": "Minutes between water reminders."
+        },
+        "thalaivar.snoozeMinutes": {
+          "type": "number",
+          "default": 9,
+          "minimum": 1,
+          "description": "Minutes to snooze when you hit Snooze."
+        },
+        "thalaivar.dailyGoal": {
+          "type": "number",
+          "default": 8,
+          "minimum": 1,
+          "description": "Glasses of water to drink per day."
+        },
+        "thalaivar.style": {
+          "type": "string",
+          "enum": ["alarm", "notification"],
+          "enumDescriptions": [
+            "Full alarm screen with Snooze and slide-to-stop.",
+            "A quiet VS Code notification only."
+          ],
+          "default": "alarm",
+          "description": "How the reminder is shown."
+        },
+        "thalaivar.playSound": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play an alarm chime when the alarm screen opens."
+        },
+        "thalaivar.enabledOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Start reminders automatically when VS Code opens."
+        }
+      }
+    }
+  }
+}

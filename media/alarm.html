@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'none'; img-src {{cspSource}} data:; style-src 'nonce-{{nonce}}'; script-src 'nonce-{{nonce}}';">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thalaivar</title>
+<style nonce="{{nonce}}">
+  :root {
+    --bg: #000;
+    --fg: #fff;
+    --muted: #8e8e93;
+    --orange: #f09a4a;
+    --track: #1c1c1e;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    user-select: none;
+    overflow: hidden;
+  }
+  .screen {
+    width: 100%;
+    max-width: 440px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 18px 32px;
+  }
+  .island {
+    align-self: center;
+    width: 180px; height: 40px;
+    border: 1.5px solid #2c2c2e;
+    border-radius: 22px;
+    display: flex; align-items: center; padding: 0 14px;
+    font-size: 15px; color: #ddd;
+  }
+  .top { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .label {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted); font-size: 30px; font-weight: 500;
+  }
+  .time {
+    font-size: clamp(72px, 26vw, 128px);
+    font-weight: 700;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .glasses { font-size: 26px; margin-top: 22px; letter-spacing: 4px; min-height: 32px; }
+  .count { color: var(--muted); font-size: 15px; margin-top: 6px; }
+  .line {
+    margin-top: 26px; text-align: center; font-size: 17px; line-height: 1.4;
+    color: #e5e5ea; max-width: 360px; font-style: italic;
+    animation: punch .6s cubic-bezier(.2,1.6,.4,1) both;
+  }
+  @keyframes punch { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .shades { font-size: 46px; animation: drop .9s ease-out both; }
+  @keyframes drop { from { transform: translateY(-60px) rotate(-25deg); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  button.snooze {
+    width: 100%; height: 72px;
+    border: 0; border-radius: 36px;
+    background: var(--orange); color: #fff;
+    font-size: 26px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+  }
+  button.snooze:active { filter: brightness(.9); }
+
+  .slider {
+    position: relative; margin-top: 18px;
+    height: 72px; border-radius: 36px;
+    background: var(--track);
+    display: flex; align-items: center; justify-content: center;
+    touch-action: none;
+  }
+  .slider .hint {
+    color: var(--muted); font-size: 22px;
+    background: linear-gradient(90deg, #555 0%, #ddd 50%, #555 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shimmer 2.4s linear infinite;
+    padding-left: 60px;
+  }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .knob {
+    position: absolute; left: 4px; top: 4px;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, #2a2a2c, #111);
+    border: 1px solid #c9a24a55;
+    box-shadow: 0 0 10px #f0b84a33;
+    display: flex; align-items: center; justify-content: center;
+    cursor: grab; font-size: 30px;
+  }
+  .knob.dragging { cursor: grabbing; }
+  .knob.release { transition: left .25s ease; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="island">🔒</div>
+
+  <div class="top">
+    <div class="shades">🕶️</div>
+    <div class="label">⏰ <span>Thalaivar</span></div>
+    <div class="time" id="time">--:--</div>
+    <div class="glasses" id="glasses"></div>
+    <div class="count" id="count"></div>
+    <div class="line" id="line"></div>
+  </div>
+
+  <button class="snooze" id="snooze">Snooze</button>
+  <div class="slider" id="slider">
+    <span class="hint">slide to drink 💧</span>
+    <div class="knob" id="knob" title="Drag right once you've had a glass">💧</div>
+  </div>
+</div>
+
+<script nonce="{{nonce}}">
+  const vscode = acquireVsCodeApi();
+  let state = {{payload}};
+
+  const $ = (id) => document.getElementById(id);
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function clock() {
+    const d = new Date();
+    $('time').textContent = pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  clock();
+  setInterval(clock, 1000);
+
+  function render() {
+    const filled = Math.min(state.count, state.goal);
+    $('glasses').textContent = '💧'.repeat(filled) + '○'.repeat(Math.max(0, state.goal - filled));
+    $('count').textContent = state.count + ' of ' + state.goal + ' glasses today';
+    if (state.line) {
+      const el = $('line');
+      el.textContent = '“' + state.line + '”';
+      el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+    }
+    $('snooze').textContent = 'Snooze ' + state.snooze + ' min';
+  }
+  render();
+
+  // ---- alarm chime (Web Audio, no files needed) ----
+  let audioCtx, chimeTimer;
+  function chime() {
+    if (!state.sound) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const play = () => {
+        const t = audioCtx.currentTime;
+        [880, 1175, 1568].forEach((f, i) => {
+          const o = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          o.type = 'sine'; o.frequency.value = f;
+          g.gain.setValueAtTime(0.0001, t + i * 0.18);
+          g.gain.exponentialRampToValueAtTime(0.25, t + i * 0.18 + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.18 + 0.4);
+          o.connect(g).connect(audioCtx.destination);
+          o.start(t + i * 0.18); o.stop(t + i * 0.18 + 0.45);
+        });
+      };
+      play();
+      let n = 0;
+      clearInterval(chimeTimer);
+      chimeTimer = setInterval(() => { if (++n >= 4) clearInterval(chimeTimer); play(); }, 2000);
+    } catch (e) { /* audio unavailable: silent alarm */ }
+  }
+  function silence() { clearInterval(chimeTimer); }
+  chime();
+
+  window.addEventListener('message', (e) => {
+    const msg = e.data;
+    if (msg.type === 'alarm') { state = msg; render(); chime(); }
+    else if (msg.type === 'count') { state.count = msg.count; state.goal = msg.goal; state.line = ''; render(); }
+  });
+
+  $('snooze').addEventListener('click', () => { silence(); vscode.postMessage({ type: 'snooze' }); });
+
+  // ---- slide to drink ----
+  const slider = $('slider'), knob = $('knob');
+  let startX = 0, startLeft = 4, dragging = false;
+  const maxLeft = () => slider.clientWidth - knob.offsetWidth - 4;
+
+  knob.addEventListener('pointerdown', (e) => {
+    dragging = true; startX = e.clientX; startLeft = knob.offsetLeft;
+    knob.classList.remove('release'); knob.classList.add('dragging');
+    knob.setPointerCapture(e.pointerId);
+  });
+  knob.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const left = Math.min(maxLeft(), Math.max(4, startLeft + e.clientX - startX));
+    knob.style.left = left + 'px';
+  });
+  const end = () => {
+    if (!dragging) return;
+    dragging = false; knob.classList.remove('dragging');
+    if (knob.offsetLeft >= maxLeft() - 6) {
+      silence();
+      knob.textContent = '😎';
+      vscode.postMessage({ type: 'drank' });
+    } else {
+      knob.classList.add('release'); knob.style.left = '4px';
+    }
+  };
+  knob.addEventListener('pointerup', end);
+  knob.addEventListener('pointercancel', end);
+</script>
+</body>
+</html>
