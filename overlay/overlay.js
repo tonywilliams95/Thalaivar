@@ -47,14 +47,11 @@ function place(x, animate) {
   return wait(ms);
 }
 
-async function walkTo(x, faceLeft) {
+async function walkTo(x) {
   character.classList.add('walking');
   useImage('walk');
-  // Custom images usually face right; flip them when walking left.
-  custom.style.transform = faceLeft ? 'scaleX(-1)' : '';
   await place(x, true);
   character.classList.remove('walking');
-  custom.style.transform = '';
   useImage('stand');
 }
 
@@ -72,7 +69,7 @@ async function enter(data) {
   await wait(50);
 
   const centre = Math.round(window.innerWidth / 2 - WIDTH / 2);
-  await walkTo(centre, false);
+  await walkTo(centre);
   await wait(250);
 
   line.textContent = fill(pick(LINES));
@@ -90,7 +87,7 @@ async function leave(text, toRight) {
 
   await wait(1800);
   bubble.classList.add('hidden');
-  await walkTo(toRight ? window.innerWidth + 80 : -WIDTH - 80, !toRight);
+  await walkTo(toRight ? window.innerWidth + 80 : -WIDTH - 80);
   character.classList.remove('happy');
   busy = false;
   window.thalaivar.done();
