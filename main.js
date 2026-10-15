@@ -101,8 +101,9 @@ function remind() {
   updateTray();
 }
 
-// Drop your own character into assets/: walk.gif (while walking) and/or
-// character.png / character.gif (standing). Transparent backgrounds look best.
+// Drop your own character into assets/: character.png (standing) and either
+// walk.gif (walking, any direction) or walk-right.webp / walk-left.webp (one per
+// direction). Transparent backgrounds look best.
 function findCustomCharacter() {
   const dir = path.join(__dirname, 'assets');
   const find = (names) => {
@@ -111,7 +112,13 @@ function findCustomCharacter() {
   };
   const stand = find(['character.png', 'character.gif', 'character.webp']);
   const walk = find(['walk.gif', 'walk.webp', 'walk.png']) || stand;
-  return stand || walk ? { stand: stand || walk, walk } : null;
+  if (!stand && !walk) return null;
+  return {
+    stand: stand || walk,
+    walk,
+    walkRight: find(['walk-right.webp', 'walk-right.gif', 'walk-right.png']) || walk,
+    walkLeft: find(['walk-left.webp', 'walk-left.gif', 'walk-left.png']) || walk,
+  };
 }
 
 // ---------------------------------------------------------------------------

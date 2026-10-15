@@ -22,7 +22,7 @@ const buttons = $('buttons');
 const custom = $('custom');
 const cartoon = $('cartoon');
 
-const WALK_SPEED = 260; // px per second
+const WALK_SPEED = 220; // px per second; one walk cycle (two steps) takes ~1.1s
 const WIDTH = 200;
 
 let state = null;
@@ -35,7 +35,9 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 function useImage(kind) {
   if (!state.custom) return;
-  custom.src = kind === 'walk' ? state.custom.walk : state.custom.stand;
+  const { stand, walkRight, walkLeft } = state.custom;
+  // He leaves the way he came in, so the direction of travel is fixed per visit.
+  custom.src = kind === 'walk' ? (state.fromLeft ? walkRight : walkLeft) : stand;
 }
 
 function place(x, animate) {

@@ -8,7 +8,7 @@ Thalaivar walks onto your screen, right over VS Code, and tells you to drink wat
 
 ![Thalaivar reminder](assets/preview.png)
 
-- 🚶 Walks in from the left or right (taking real steps), stops in the middle, then carries on across and off the other side
+- 🚶 Walks in from the left or right with a human gait (feet lift and plant, body bobs and shifts weight, arms swing against the legs), stops in the middle, then carries on across and off the other side
 - 💬 Speech bubble with a random punch dialogue and your name
 - ✅ **YES** logs a glass and he walks off happy; **Remind me later** snoozes for 10 minutes
 - 💧 Today's glass count in the menu bar / system tray
@@ -54,9 +54,10 @@ The built-in character is a cartoon. To use your own picture or animation, drop 
 | File | Used when |
 | --- | --- |
 | `assets/character.png` (or `.gif` / `.webp`) | Standing and talking |
-| `assets/walk.gif` (or `.webp` / `.png`) | Walking in and out |
+| `assets/walk-right.webp` / `assets/walk-left.webp` | Walking right / walking left |
+| `assets/walk.gif` (or `.webp` / `.png`) | Walking, if you only have one clip for both directions |
 
-If only one is present, it's used for both. The included `walk.webp` is a 4-frame walk cycle built from `character.png`: the legs alternate, he bobs, and his weight shifts from side to side.
+Missing files fall back to the next one. The included walk cycles are generated from `character.png` by a script that bends the photo through a 12-frame gait, so the standing and walking images line up exactly. A real side-view walking clip with a transparent background will always look better than a photo can: drop it in as `walk.gif`.
 
 ## Notes
 
