@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain, screen, shell, nativeImage } = require('electron');
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
 const { pathToFileURL } = require('url');
 
@@ -9,7 +8,7 @@ const OVERLAY_HEIGHT = 620;
 const INTERVAL_CHOICES = [15, 30, 45, 60, 90];
 
 const DEFAULT_CONFIG = {
-  name: prettyName(os.userInfo().username),
+  name: 'Tony',
   intervalMinutes: 45,
   snoozeMinutes: 10,
   dailyGoal: 8,
@@ -28,11 +27,6 @@ let stats;
 // ---------------------------------------------------------------------------
 // Storage: config.json (user-editable) and stats.json (today's glass count)
 // ---------------------------------------------------------------------------
-
-function prettyName(raw) {
-  const first = String(raw || 'Kanna').split(/[._\-\s]/)[0];
-  return first.charAt(0).toUpperCase() + first.slice(1);
-}
 
 function dataFile(name) {
   return path.join(app.getPath('userData'), name);

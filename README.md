@@ -37,7 +37,7 @@ He shows up a moment after launch, then every 45 minutes. Use the 💧 tray / me
 
 ```json
 {
-  "name": "Akash",
+  "name": "Tony",
   "intervalMinutes": 45,
   "snoozeMinutes": 10,
   "dailyGoal": 8,
